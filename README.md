@@ -59,3 +59,9 @@ and adds it to the group `sudo`.
 CreateLinuxDistro.ps1 -INPUT_FILENAME focal-server-cloudimg-amd64-wsl.rootfs.tar.gz -OUTPUT_DIRNAME "%LOCALAPPDATA%/ubuntu2004-1" -OUTPUT_DISTRONAME ubuntu2004-1 -CREATE_USER $true -CREATE_USER_USERNAME test1 -ADD_USER_TO_GROUP $true -ADD_USER_TO_GROUP_NAME sudo
 ```
 
+# Delete WSL2 distribution
+
+As stated in the [official documentation](https://docs.microsoft.com/en-us/windows/wsl/wsl-config)
+you can delete a WSL2 distribution using the following command:
+
+```wsl --unregister <DistributionName>```
