@@ -116,19 +116,14 @@ Param (
         ValueFromPipeline = $false,
         ValueFromRemainingArguments = $false
     )]
-    [bool]
     $SET_USER_AS_DEFAULT = "root"
 )
 
 begin {
-    # Curtesy of https://github.com/microsoft/WSL/issues/3974#issuecomment-522921145
-    Function WSLSetDefaultUser ($distro, $user) {
-        Get-ItemProperty Registry::HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Lxss\*\ DistributionName | Where-Object -Property DistributionName -eq $distro | Set-ItemProperty -Name DefaultUid -Value ((wsl -d $distro -u $user -e id -u) | Out-String);
-    }
-
 }
 
 process {
+
     if ($pscmdlet.ShouldProcess("Target", "Operation")) {
         Write-Output "Importing distro $OUTPUT_DISTRONAME using $INPUT_FILENAME to $OUTPUT_DIRNAME"
         wsl --import $OUTPUT_DISTRONAME $OUTPUT_DIRNAME $INPUT_FILENAME
@@ -142,8 +137,8 @@ process {
                 wsl -d $OUTPUT_DISTRONAME /usr/sbin/adduser $CREATE_USER_USERNAME $ADD_USER_TO_GROUP_NAME
             }
         }
-
-        WSLSetDefaultUser($OUTPUT_DISTRONAME, $SET_USER_AS_DEFAULT)
+        # Curtesy of https://github.com/microsoft/WSL/issues/3974#issuecomment-522921145
+        Get-ItemProperty Registry::HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Lxss\*\ DistributionName | Where-Object -Property DistributionName -eq $OUTPUT_DISTRONAME | Set-ItemProperty -Name DefaultUid -Value ((wsl -d $OUTPUT_DISTRONAME -u $SET_USER_AS_DEFAULT -e id -u) | Out-String);
     }
 
 }
