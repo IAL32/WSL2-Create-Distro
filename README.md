@@ -28,41 +28,6 @@ Change the working directory:
 
 And then use the script!
 
-If you have noticed, if you created a user, it won't have a password set. That's ok! We can always
-use the function [here](https://github.com/microsoft/WSL/issues/3974#issuecomment-522921145):
-
-```{powershell}
-Get-ItemProperty Registry::HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Lxss\*\ DistributionName | Where-Object -Property DistributionName -eq <YOUR_DISTRONAME> | Set-ItemProperty -Name DefaultUid -Value ((wsl -d <YOUR_DISTRONAME> -u root -e id -u) | Out-String);
-```
-
-And set the user back to `root` (if it wasn't already). From here, we can then change
-the user's password:
-```
-passwd <USERNAME>
-```
-and also, while we are at it, we can do the same for the root user:
-```
-passwd
-```
-
-The last thing would be to set `/bin/bash` as the default shell for the new user.
-This is necessary, as WSL bindings to Windows will only work if `bash` is used as
-the default shell.
-
-We just need to login with your user, and launch:
-```
-chsh
-```
-
-The command will then ask for your password, and the path of the shell you want to
-use. Just type:
-
-```
-/bin/bash
-```
-
-And that's it!
-
 # Usage
 
 ```

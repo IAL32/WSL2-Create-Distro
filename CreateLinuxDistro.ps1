@@ -184,9 +184,7 @@ process {
         wsl -d $OUTPUT_DISTRONAME /bin/bash -c "echo -e '$ROOT_PASSWORD\n$ROOT_PASSWORD' | /usr/bin/passwd"
 
         Write-Output "Setting default user as $SET_USER_AS_DEFAULT"
-        # Curtesy of https://github.com/microsoft/WSL/issues/3974#issuecomment-522921145
-        Get-ItemProperty Registry::HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Lxss\*\ DistributionName | Where-Object -Property DistributionName -eq $OUTPUT_DISTRONAME | Set-ItemProperty -Name DefaultUid -Value ((wsl -d $OUTPUT_DISTRONAME -u $SET_USER_AS_DEFAULT -e id -u) | Out-String);
-
+        wsl -d $OUTPUT_DISTRONAME /bin/bash -c "echo -e '[user]\ndefault=$SET_USER_AS_DEFAULT' > /etc/wsl.conf"
     }
 
 }
